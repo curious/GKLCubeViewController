@@ -8,7 +8,7 @@
 
 #import "GKLCubeViewController.h"
 
-CGFloat const kPerspective = -0.001f;
+CGFloat const kPerspective = -0.002f;
 CGFloat const kDuration    =  0.4f;
 
 @interface GKLCubeViewController ()
