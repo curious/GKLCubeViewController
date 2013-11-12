@@ -37,4 +37,7 @@
 
 - (void)addCubeSideForChildController:(UIViewController *)controller;
 
+- (void)rotateBackwards;
+- (void)rotateForwards;
+
 @end

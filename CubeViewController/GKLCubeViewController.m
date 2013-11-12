@@ -149,6 +149,18 @@ CGFloat const kDuration    =  0.4f;
     }
 }
 
+- (void)rotateBackwards
+{
+    self.targetAngle = M_PI_2;
+    [self startDisplayLink];
+}
+
+- (void)rotateForwards
+{
+    self.targetAngle = -M_PI_2;
+    [self startDisplayLink];
+}
+
 #pragma mark - CADisplayLink
 
 /*
