@@ -110,6 +110,8 @@ CGFloat const kDuration    =  0.4f;
 
 - (void)handlePan:(UIPanGestureRecognizer*)gesture
 {
+    if ([self inAnimation]) return;
+    
     CGPoint translation = [gesture translationInView:gesture.view];
     double percentageOfWidth = translation.x / self.view.frame.size.width;
 
@@ -151,12 +153,18 @@ CGFloat const kDuration    =  0.4f;
 
 - (void)rotateBackwards
 {
+    if ([self inAnimation]) return;
+    
+    self.startAngle = 0;
     self.targetAngle = M_PI_2;
     [self startDisplayLink];
 }
 
 - (void)rotateForwards
 {
+    if ([self inAnimation]) return;
+    
+    self.startAngle = 0;
     self.targetAngle = -M_PI_2;
     [self startDisplayLink];
 }
@@ -171,6 +179,11 @@ CGFloat const kDuration    =  0.4f;
 
  The end result should be a more responsive rotation animation. The downside is that I'm employing a simplistic linear animation.
  */
+
+-(BOOL)inAnimation
+{
+    return !!self.displayLink;
+}
 
 - (void)startDisplayLink
 {
