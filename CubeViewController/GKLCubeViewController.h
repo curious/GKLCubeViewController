@@ -40,4 +40,6 @@
 - (void)rotateBackwards;
 - (void)rotateForwards;
 
+- (UIViewController *)frontmostFacingViewController;
+
 @end

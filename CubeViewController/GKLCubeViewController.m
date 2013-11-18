@@ -169,6 +169,13 @@ CGFloat const kDuration    =  0.4f;
     [self startDisplayLink];
 }
 
+- (UIViewController *)frontmostFacingViewController
+{
+    if ([self.childViewControllers count] > 0)
+        return [self.childViewControllers objectAtIndex:(4 - self.facingSide) % 4];
+    return nil;
+}
+
 #pragma mark - CADisplayLink
 
 /*
