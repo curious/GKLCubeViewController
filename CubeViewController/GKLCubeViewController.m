@@ -110,6 +110,10 @@ CGFloat const kDuration    =  0.4f;
 
 - (void)handlePan:(UIPanGestureRecognizer*)gesture
 {
+    // Don't allow panning if one or fewer facets
+    if ([self.childViewControllers count] <= 1)
+        return;
+    
     if ([self inAnimation]) return;
     
     CGPoint translation = [gesture translationInView:gesture.view];
