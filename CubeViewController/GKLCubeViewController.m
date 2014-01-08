@@ -8,7 +8,8 @@
 
 #import "GKLCubeViewController.h"
 
-CGFloat const kPerspective = -0.002f;
+CGFloat const kPerspectiveIPhone = -0.002f;
+CGFloat const kPerspectiveIPad = -0.001f;
 CGFloat const kDuration    =  0.4f;
 
 @interface GKLCubeViewController ()
@@ -79,7 +80,7 @@ CGFloat const kDuration    =  0.4f;
     }
 
     double halfWidth = self.view.bounds.size.width / 2.0;
-    CGFloat perspective = kPerspective;
+    CGFloat perspective = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? kPerspectiveIPhone : kPerspectiveIPad;
     CATransform3D transform = CATransform3DIdentity;
     if (applyPerspective) transform.m34 = perspective;
     transform = CATransform3DTranslate(transform, 0, 0, -halfWidth);
