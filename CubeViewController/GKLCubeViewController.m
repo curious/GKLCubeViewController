@@ -174,6 +174,15 @@ CGFloat const kDuration    =  0.4f;
     [self startDisplayLink];
 }
 
+- (void)rotateTwice
+{
+    if ([self inAnimation]) return;
+    
+    self.startAngle = 0;
+    self.targetAngle = -2 * M_PI_2;
+    [self startDisplayLink];
+}
+
 - (UIViewController *)frontmostFacingViewController
 {
     if ([self.childViewControllers count] > 0)

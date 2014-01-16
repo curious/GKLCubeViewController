@@ -39,6 +39,7 @@
 
 - (void)rotateBackwards;
 - (void)rotateForwards;
+- (void)rotateTwice;
 
 - (UIViewController *)frontmostFacingViewController;
 
