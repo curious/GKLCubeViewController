@@ -43,4 +43,6 @@
 
 - (UIViewController *)frontmostFacingViewController;
 
+- (void)handlePan:(UIPanGestureRecognizer*)gesture;
+
 @end
