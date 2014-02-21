@@ -185,8 +185,9 @@ CGFloat const kDuration    =  0.4f;
 
 - (UIViewController *)frontmostFacingViewController
 {
-    if ([self.childViewControllers count] > 0)
-        return [self.childViewControllers objectAtIndex:(4 - self.facingSide) % 4];
+    int numFaces = [self.childViewControllers count];
+    if (numFaces > 0)
+        return [self.childViewControllers objectAtIndex:(numFaces - self.facingSide) % numFaces];
     return nil;
 }
 
