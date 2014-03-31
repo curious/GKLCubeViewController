@@ -29,6 +29,9 @@ CGFloat const kDuration    =  0.4f;
 @property (nonatomic)         CGFloat         startAngle;
 @property (nonatomic)         CGFloat         targetAngle;
 
+@property (nonatomic)         BOOL            peeking;
+@property (nonatomic)         CGFloat         peekDuration;
+
 @end
 
 
@@ -43,6 +46,7 @@ CGFloat const kDuration    =  0.4f;
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     [self.view addGestureRecognizer:pan];
 
+    self.peeking = NO;
     self.facingSide = 0;
 }
 
@@ -73,7 +77,7 @@ CGFloat const kDuration    =  0.4f;
         {
             controller.view.alpha = 0.0;
 
-            if ([controller respondsToSelector:@selector(cubeViewDidHide)])
+            if ([controller respondsToSelector:@selector(cubeViewDidHide)] && !self.peeking)
                 [(id<GKLCubeViewControllerDelegate>)controller cubeViewDidHide];
         }
         return;
@@ -93,7 +97,7 @@ CGFloat const kDuration    =  0.4f;
         controller.view.alpha = 1.0;
         controller.view.frame = controller.view.superview.bounds;
 
-        if ([controller respondsToSelector:@selector(cubeViewDidUnhide)])
+        if ([controller respondsToSelector:@selector(cubeViewDidUnhide)] && !self.peeking)
             [(id<GKLCubeViewControllerDelegate>)controller cubeViewDidUnhide];
     }
 }
@@ -183,6 +187,32 @@ CGFloat const kDuration    =  0.4f;
     [self startDisplayLink];
 }
 
+- (void)peek
+{
+    [self peekAngle:-M_PI_2 / 3 duration:2.0f];
+}
+
+- (void)peekAngle:(CGFloat)angle duration:(CGFloat)duration
+{
+    [self peekAngle:angle duration:duration finish:NO];
+}
+
+- (void)peekAngle:(CGFloat)angle duration:(CGFloat)duration finish:(BOOL)finish
+{
+    if ([self inAnimation]) return;
+    
+    self.peekDuration = duration;
+    if (finish) {
+        self.startAngle = self.targetAngle;
+        self.targetAngle = 0.0;
+    } else {
+        self.peeking = YES;
+        self.startAngle = 0;
+        self.targetAngle = angle;
+    }
+    [self startDisplayLinkWithDuration:self.peekDuration];
+}
+
 - (UIViewController *)frontmostFacingViewController
 {
     int numFaces = [self.childViewControllers count];
@@ -209,9 +239,14 @@ CGFloat const kDuration    =  0.4f;
 
 - (void)startDisplayLink
 {
+    [self startDisplayLinkWithDuration:kDuration];
+}
+
+- (void)startDisplayLinkWithDuration:(CGFloat)duration
+{
     self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(handleDisplayLink:)];
     self.startTime = CACurrentMediaTime();
-    self.animationDuration = fabsf(self.targetAngle - self.startAngle) / M_PI_2 * kDuration;
+    self.animationDuration = fabsf(self.targetAngle - self.startAngle) / M_PI_2 * duration;
     [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
@@ -239,6 +274,12 @@ CGFloat const kDuration    =  0.4f;
         // we are done
 
         [self stopDisplayLink];
+        
+        if (self.peeking) {
+            self.peeking = NO;
+            [self peekAngle:0.0 duration:self.peekDuration finish:YES];
+            return;
+        }
 
         CGFloat faceAdjustment = self.targetAngle / M_PI_2;
         self.facingSide = (int)floorf(faceAdjustment + self.facingSide + 4.5) % 4;

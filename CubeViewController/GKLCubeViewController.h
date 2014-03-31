@@ -40,6 +40,8 @@
 - (void)rotateBackwards;
 - (void)rotateForwards;
 - (void)rotateTwice;
+- (void)peek;
+- (void)peekAngle:(CGFloat)angle duration:(CGFloat)duration;
 
 - (UIViewController *)frontmostFacingViewController;
 
